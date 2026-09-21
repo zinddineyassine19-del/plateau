@@ -10,7 +10,12 @@
 /* ================================================================
    Page d'accueil — sobre
    ================================================================ */
-body{background:#06080C;color:#E7EBF2;overflow-x:hidden}
+/* « clip » et non « hidden » : hidden sur un axe force l'autre à « auto », ce
+   qui fait du corps de page une zone de défilement — et une barre latérale
+   collante n'a alors plus rien à quoi se coller. clip coupe le débordement
+   sans créer de défilement. hidden reste écrit avant, pour les navigateurs
+   qui ne connaissent pas encore clip. */
+body{background:#06080C;color:#E7EBF2;overflow-x:hidden;overflow-x:clip}
 body .topbar{background:rgba(6,8,12,.78);border-bottom-color:rgba(255,255,255,.08)}
 body .brand{color:#F2F5FA}
 body .iconbtn{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:#C7CFDB}
@@ -1061,6 +1066,11 @@ figure.ix .ix-fiche{
 }
 figure.ix .ix-fiche > div{min-width:0}
 
+/* L'amorce : le comédien qu'on a au premier plan, de dos. Dans un vrai plan
+   c'est une masse sombre et floue ; ici on la met simplement en retrait, pour
+   que l'œil aille d'abord sur celui qu'on est en train de filmer. */
+figure.ix .ix-amorce{opacity:.55}
+
 
 /* ==========================================================================
    La lumière suit la main
@@ -1721,9 +1731,16 @@ function CLEL_DOC(root) {
 <div class="L" data-l="fr" lang="fr" dir="ltr"><span id="top-fr"></span>
 
 <div class="progress" aria-hidden="true"></div>
+<div class="scrim" aria-hidden="true"></div>
 
 <header class="topbar">
   <div class="topbar-in">
+    <!-- Au téléphone, c'est ce bouton qui fait glisser le sommaire depuis la
+         gauche. Sur l'accueil seul, où il n'y a pas de sommaire, le script le
+         retire de lui-même. -->
+    <button class="iconbtn" id="menuBtn" aria-label="Ouvrir le sommaire">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
     <a class="brand" href="#top-fr"><span class="mark"></span>Le Plateau</a>
     <span class="spacer"></span>
     <button class="iconbtn" id="searchBtn" aria-label="Rechercher dans le livre">
@@ -1753,7 +1770,7 @@ function CLEL_DOC(root) {
     <div>
       <p class="eyebrow2 rv">Formation audiovisuelle · le manuel</p>
       <h1 class="htitle rv">Le<span class="l2">Plateau</span></h1>
-      <p class="hsub rv">Un manuel illustré de <b>prise de vues, de lumière, de son et de montage</b>. 41 chapitres, 68 schémas dessinés à la main — dont dix-huit que l'on manipule à la souris —, plus huit plans de feu prêts à monter, en français avec la terminologie anglaise des plateaux.</p>
+      <p class="hsub rv">Un manuel illustré de <b>prise de vues, de lumière, de son et de montage</b>. 42 chapitres, 68 schémas dessinés à la main — dont dix-huit que l'on manipule à la souris —, plus huit plans de feu prêts à monter, en français avec la terminologie anglaise des plateaux.</p>
       <div class="hcta rv">
         <a class="btn btn-p" href="#c1">
           <svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v16H6.5A2.5 2.5 0 0 0 4 21z"/><path d="M4 5.5V21"/></svg>Commencer le chapitre 1</a>
@@ -1864,35 +1881,12 @@ function CLEL_DOC(root) {
     </figure>
   </div>
 
-  <a class="scroller rv" href="#sommaire" aria-label="Aller au sommaire"><span>Sommaire</span><span class="ln2"></span></a>
+  <!-- Le sommaire n'est plus une page qu'on traverse : il est dans la colonne
+       de gauche, du premier chapitre au dernier. Ici, on entre dans le livre. -->
+  <a class="scroller rv" href="#c1" aria-label="Commencer le chapitre 1"><span>Commencer</span><span class="ln2"></span></a>
 </section>
 
-<section class="dark-sec" id="sommaire">
-  <div class="wrap">
-    <div class="sec-h"><span class="n">01</span><h2>Le livre, partie par partie</h2></div>
-    <p class="sec-p">Six parties qui se lisent dans l'ordre : la caméra, l'objectif, la lumière, le plateau — puis le son et le montage, sans lesquels tout le reste ne sert à rien.</p>
-    <div class="parts">
-<article class="pcard"><p class="pn">Partie I</p><h3>La caméra</h3><p class="pd">Ce que la machine fait de la lumière : le capteur, l'objectif, l'exposition, le cadre et le mouvement.</p><ol><li><a href="#c1"><b>01</b><span>Anatomie de la caméra &amp; le capteur</span></a></li><li><a href="#c2"><b>02</b><span>L'objectif et la focale</span></a></li><li><a href="#c3"><b>03</b><span>Le triangle d'exposition</span></a></li><li><a href="#c4"><b>04</b><span>La profondeur de champ</span></a></li><li><a href="#c5"><b>05</b><span>L'échelle des plans</span></a></li><li><a href="#c6"><b>06</b><span>Les angles de prise de vues</span></a></li><li><a href="#c7"><b>07</b><span>Les mouvements d'appareil</span></a></li><li><a href="#c8"><b>08</b><span>Cadrage et composition</span></a></li><li><a href="#c9"><b>09</b><span>La règle des 180°</span></a></li><li><a href="#c10"><b>10</b><span>Fréquence et angle d'obturation</span></a></li></ol></article>
-<article class="pcard"><p class="pn">Partie II</p><h3>La lumière</h3><p class="pd">Les quatre propriétés, la loi de l'inverse du carré, la couleur, et comment on construit un éclairage qui raconte quelque chose.</p><ol><li><a href="#c11"><b>11</b><span>Les quatre propriétés de la lumière</span></a></li><li><a href="#c12"><b>12</b><span>Lumière dure et lumière douce</span></a></li><li><a href="#c13"><b>13</b><span>La loi de l'inverse du carré</span></a></li><li><a href="#c14"><b>14</b><span>La température de couleur</span></a></li><li><a href="#c15"><b>15</b><span>L'éclairage en trois points</span></a></li><li><a href="#c16"><b>16</b><span>Les schémas de portrait</span></a></li><li><a href="#c17"><b>17</b><span>Le rapport d'éclairage</span></a></li><li><a href="#c18"><b>18</b><span>Projecteurs et accessoires</span></a></li><li><a href="#c19"><b>19</b><span>Le plan de feu</span></a></li></ol></article>
-<article class="pcard"><p class="pn">Partie III</p><h3>Dans la machine</h3><p class="pd">L'anatomie technique : capteur, objectif, codec, projecteur, DMX et le balayage de l'image.</p><ol><li><a href="#c20"><b>20</b><span>Anatomie de la caméra</span></a></li><li><a href="#c21"><b>21</b><span>Le capteur en détail</span></a></li><li><a href="#c22"><b>22</b><span>Anatomie de l'objectif</span></a></li><li><a href="#c23"><b>23</b><span>Codec, couleur et log</span></a></li><li><a href="#c24"><b>24</b><span>Ce qui distingue deux caméras</span></a></li><li><a href="#c25"><b>25</b><span>Anatomie du projecteur</span></a></li><li><a href="#c26"><b>26</b><span>Électricité et DMX</span></a></li><li><a href="#c27"><b>27</b><span>Le balayage et les définitions</span></a></li></ol></article>
-<article class="pcard"><p class="pn">Partie IV</p><h3>Sur le plateau</h3><p class="pd">Le geste : mesurer la lumière, filtrer, faire le point, tenir la caméra, dompter le soleil et éclairer un fond vert.</p><ol><li><a href="#c28"><b>28</b><span>Le posemètre et la mesure</span></a></li><li><a href="#c29"><b>29</b><span>Les filtres</span></a></li><li><a href="#c30"><b>30</b><span>Faire le point</span></a></li><li><a href="#c31"><b>31</b><span>La stabilisation</span></a></li><li><a href="#c32"><b>32</b><span>La lumière naturelle</span></a></li><li><a href="#c33"><b>33</b><span>Le fond vert</span></a></li></ol></article>
-<article class="pcard"><p class="pn">Partie V</p><h3>Le son</h3><p class="pd">Les bases, et rien de plus : ce que le micro entend, le niveau, la distance, les gestes de plateau qui sauvent un son — et la claquette, qui recolle l'image et le son.</p><ol><li><a href="#c34"><b>34</b><span>Ce que le micro entend</span></a></li><li><a href="#c35"><b>35</b><span>Le niveau, et le casque</span></a></li><li><a href="#c36"><b>36</b><span>Placer le micro</span></a></li><li><a href="#c37"><b>37</b><span>Le son sur le plateau</span></a></li><li><a href="#c38"><b>38</b><span>La claquette</span></a></li></ol></article>
-<article class="pcard"><p class="pn">Partie VI</p><h3>Le montage</h3><p class="pd">Les bases encore : ranger ses rushes, couper au bon endroit, sentir le rythme, et exporter sans abîmer le travail.</p><ol><li><a href="#c39"><b>39</b><span>Dérusher et ranger</span></a></li><li><a href="#c40"><b>40</b><span>La coupe</span></a></li><li><a href="#c41"><b>41</b><span>Le rythme</span></a></li><li><a href="#c42"><b>42</b><span>Exporter</span></a></li></ol></article>
-    </div>
 
-    <div class="sec-h" style="margin-top:56px"><span class="n">02</span><h2>Annexes</h2></div>
-    <div class="annex">
-<a class="acard" href="#pf"><span class="an">Annexe A</span><h4>Plans de feu prêts à monter</h4><p>Les huit plans de feu réunis dans une seule figure : un clic et le plan se dessine à l'échelle, avec son image, son matériel et ses pièges.</p></a><a class="acard" href="#ck"><span class="an">Annexe B</span><h4>Check-list de tournage</h4><p>Ce qu'il faut vérifier avant, pendant et après un tournage — plus les sources techniques du livre.</p></a>
-    </div>
-  </div>
-</section>
-
-<footer class="homefoot">
-  <div class="wrap">
-    <span>© Yassine Zineddine — tous droits réservés</span>
-    <span>Le Plateau · édition française</span>
-  </div>
-</footer>
 
 <div class="sdlg" id="sdlg" role="dialog" aria-modal="true" aria-label="Rechercher dans le livre" data-vide="Aucun résultat pour">
   <div class="sbox">
@@ -3737,88 +3731,121 @@ seul repère que l'œil du spectateur cherche vraiment. Le reste est du goût.</
 <p>Tracez une ligne imaginaire entre les deux personnages : c'est l'<span class="t">axe</span> <span class="tr">the line, the axis</span>. Tant que la caméra reste dans un <b>seul demi-espace</b>, le personnage A reste toujours du même côté du cadre. Franchissez la ligne, et les côtés s'inversent au plan suivant.</p>
 
 <figure class="ix" id="axFig">
-<div class="ix-head"><b>Fig. 9.1 · manipulable</b><span>déplacez la caméra autour de l'axe</span></div>
+<div class="ix-head"><b>Fig. 9.1 · manipulable</b><span>déplacez la caméra : le cadre se refait sous vos yeux</span></div>
 
 <div class="ix-stage">
-<svg id="axSvg" viewBox="0 0 620 416" role="img" tabindex="0"
-     aria-label="Vue de dessus de la règle des 180° : faites glisser la caméra autour des deux comédiens et regardez l'ordre à l'écran s'inverser"
+<svg id="axSvg" viewBox="0 0 620 540" role="img" tabindex="0"
+     aria-label="La règle des 180° : faites glisser la caméra autour des deux comédiens. Le grand cadre montre ce que voit l'objectif — A en bleu, B en ambre — et leur ordre s'inverse dès que l'axe est franchi."
      style="touch-action:none;cursor:grab">
-  <rect x="0" y="0" width="620" height="292" fill="url(#grid)"/>
+  <defs>
+    <clipPath id="axClip1"><rect x="16" y="52" width="252" height="142"/></clipPath>
+    <clipPath id="axClip2"><rect x="50" y="232" width="520" height="292"/></clipPath>
+  </defs>
 
-  <!-- demi-espace autorisé -->
-  <path id="axHalf" d="M180 160 A 120 120 0 0 0 420 160 Z" class="bgd" opacity=".5"/>
+  <rect x="0" y="0" width="620" height="212" fill="url(#grid)"/>
 
-  <!-- l'axe -->
-  <line x1="120" y1="160" x2="500" y2="160" class="sa" stroke-width="2"/>
-  <text x="500" y="148" text-anchor="end" class="at sm b">l'axe — the line</text>
+  <!-- ====================================================================
+       VUE DE DESSUS — le plateau vu du ciel
+       ==================================================================== -->
 
-  <!-- les deux comédiens -->
-  <circle cx="252" cy="160" r="16" class="bgp"/>
-  <circle cx="252" cy="160" r="16" class="nf sc" stroke-width="2"/>
-  <text x="252" y="166" text-anchor="middle" class="b">A</text>
-  <circle cx="348" cy="160" r="16" class="bgp"/>
-  <circle cx="348" cy="160" r="16" class="nf sc" stroke-width="2"/>
-  <text x="348" y="166" text-anchor="middle" class="b">B</text>
-  <line x1="268" y1="160" x2="332" y2="160" class="sc" stroke-width="1" stroke-dasharray="3 3"/>
+  <!-- le demi-espace où la caméra a le droit d'aller -->
+  <path d="M308 104 A 84 84 0 0 0 476 104 Z" class="bgd" opacity=".5"/>
 
-  <!-- cercle de déplacement -->
-  <circle cx="300" cy="160" r="120" class="nf sl" stroke-width="1" stroke-dasharray="3 5"/>
+  <!-- l'axe : la ligne qui relie les deux regards -->
+  <line x1="292" y1="104" x2="504" y2="104" class="sa" stroke-width="2"/>
+  <text x="510" y="100" text-anchor="start" class="at sm b">l'axe — the line</text>
 
-  <!-- position de référence (fixe) -->
-  <g class="fd" opacity=".45"><g transform="translate(300,280) rotate(-90)"><use href="#cam"/></g></g>
-  <text x="300" y="304" text-anchor="middle" class="dt sm">réf.</text>
+  <!-- les deux comédiens, chacun sa couleur : on les reconnaîtra dans le cadre -->
+  <circle cx="357" cy="104" r="13" class="bgp"/>
+  <circle cx="357" cy="104" r="13" class="nf sd" stroke-width="2"/>
+  <text x="357" y="109" text-anchor="middle" class="b dt">A</text>
+  <circle cx="427" cy="104" r="13" class="bgp"/>
+  <circle cx="427" cy="104" r="13" class="nf sk" stroke-width="2"/>
+  <text x="427" y="109" text-anchor="middle" class="b kt">B</text>
+  <line x1="370" y1="104" x2="414" y2="104" class="sc" stroke-width="1" stroke-dasharray="3 3"/>
 
-  <!-- champ de vision + caméra mobile -->
+  <!-- le cercle sur lequel on promène la caméra -->
+  <circle cx="392" cy="104" r="84" class="nf sl" stroke-width="1" stroke-dasharray="3 5"/>
+
+  <!-- la position du plan 1, celle qui ne bouge pas -->
+  <g class="fd" opacity=".35"><g id="axRefCam"><use href="#cam"/></g></g>
+  <text id="axRefLbl" x="495" y="151" text-anchor="start" class="dt sm">plan 1</text>
+
+  <!-- le champ de vision, puis la caméra qu'on déplace -->
   <path id="axCone" class="bgk" opacity=".3" d=""/>
   <g id="axCam"><g id="axCamR"><use href="#cam"/></g></g>
   <g id="axCross" style="display:none">
-    <line x1="-15" y1="-15" x2="15" y2="15" class="sa" stroke-width="2.6"/>
-    <line x1="15" y1="-15" x2="-15" y2="15" class="sa" stroke-width="2.6"/>
+    <circle r="15" class="bgp"/>
+    <circle r="15" class="nf sa" stroke-width="1.4"/>
+    <line x1="-8" y1="-8" x2="8" y2="8" class="sa" stroke-width="2.8"/>
+    <line x1="8" y1="-8" x2="-8" y2="8" class="sa" stroke-width="2.8"/>
   </g>
 
-  <!-- les deux cadres -->
-  <g transform="translate(0,306)">
-    <rect x="86" y="0" width="184" height="82" class="bgp"/>
-    <rect x="86" y="0" width="184" height="82" class="nf sd" stroke-width="1.6"/>
-    <circle cx="128" cy="40" r="17" class="nf sc" stroke-width="1.7"/><text x="128" y="46" text-anchor="middle" class="b">A</text>
-    <circle cx="228" cy="40" r="17" class="nf sc" stroke-width="1.7"/><text x="228" y="46" text-anchor="middle" class="b">B</text>
-    <text x="178" y="98" text-anchor="middle" class="sm dt">plan de référence</text>
-
-    <rect id="axFrame2" x="350" y="0" width="184" height="82" class="bgp"/>
-    <rect id="axFrame2b" x="350" y="0" width="184" height="82" class="nf sd" stroke-width="1.6"/>
-    <circle id="axA2" cy="40" r="17" class="nf sc" stroke-width="1.7"/><text id="axA2t" y="46" text-anchor="middle" class="b">A</text>
-    <circle id="axB2" cy="40" r="17" class="nf sc" stroke-width="1.7"/><text id="axB2t" y="46" text-anchor="middle" class="b">B</text>
-    <text id="axCap2" x="442" y="98" text-anchor="middle" class="sm dt">votre plan</text>
+  <!-- ====================================================================
+       PLAN 1 — le plan précédent, fixe. C'est à lui qu'on se raccorde.
+       ==================================================================== -->
+  <g clip-path="url(#axClip1)">
+    <rect x="16" y="52" width="252" height="142" class="bgp"/>
+    <line x1="16" y1="109" x2="268" y2="109" class="sl" stroke-width="1" opacity=".45"/>
+    <g id="ax1Loin"></g>
+    <g id="ax1Pres"></g>
+    <path id="ax1Reg" class="nf" stroke-width="2" fill="none" d=""/>
+    <text id="ax1LA" text-anchor="middle" class="b dt sm">A</text>
+    <text id="ax1LB" text-anchor="middle" class="b kt sm">B</text>
   </g>
+  <rect x="16" y="52" width="252" height="142" class="nf sd" stroke-width="1.6"/>
+  <text x="26" y="68" class="sm b dt">PLAN 1 · CHAMP SUR A</text>
+  <text x="142" y="208" text-anchor="middle" class="sm mut">il est déjà tourné — il ne bouge plus</text>
+
+  <!-- ====================================================================
+       PLAN 2 — ce que voit la caméra que vous tenez
+       ==================================================================== -->
+  <g clip-path="url(#axClip2)">
+    <rect x="50" y="232" width="520" height="292" class="bgp"/>
+    <line x1="50" y1="349" x2="570" y2="349" class="sl" stroke-width="1" opacity=".45"/>
+    <g id="ax2Loin"></g>
+    <g id="ax2Pres"></g>
+    <path id="ax2Reg" class="nf" stroke-width="2.6" fill="none" d=""/>
+    <text id="ax2LA" text-anchor="middle" class="b dt">A</text>
+    <text id="ax2LB" text-anchor="middle" class="b kt">B</text>
+  </g>
+  <rect id="ax2Bord" x="50" y="232" width="520" height="292" class="nf sd" stroke-width="1.8"/>
+  <text id="ax2Tag" x="62" y="252" class="sm b dt">PLAN 2 · CHAMP SUR A</text>
+  <text id="ax2Cap" x="310" y="536" text-anchor="middle" class="sm dt">l'ordre est tenu : A à gauche, B à droite — le raccord passe</text>
 </svg>
 </div>
 
 <div class="ix-ctl">
   <div class="ix-row" style="grid-column:1/-1">
-    <label class="ix-lab" for="axR">Position de la caméra <output class="ix-val k" id="axRv">90°</output></label>
-    <input type="range" id="axR" min="0" max="359" step="1" value="90">
+    <label class="ix-lab" for="axR">Position de la caméra <output class="ix-val k" id="axRv">150°</output></label>
+    <input type="range" id="axR" min="0" max="359" step="1" value="150">
   </div>
 </div>
 
 <div class="ix-btns">
   <button class="ix-b" type="button" data-a="30">Champ sur A</button>
-  <button class="ix-b" type="button" data-a="90">Face aux deux</button>
   <button class="ix-b" type="button" data-a="150">Contrechamp sur B</button>
-  <button class="ix-b" type="button" data-a="270">Franchir l'axe</button>
+  <button class="ix-b" type="button" data-a="90">Les deux, de face</button>
+  <button class="ix-b" type="button" data-a="330">Champ A · axe franchi</button>
+  <button class="ix-b" type="button" data-a="210">Contrechamp B · axe franchi</button>
 </div>
 
 <div class="ix-out">
   <div><span class="t">Demi-espace</span><span class="v" id="axSide">autorisé</span></div>
-  <div><span class="t">A est</span><span class="v" id="axA">à droite</span></div>
-  <div><span class="t">B est</span><span class="v" id="axB">à gauche</span></div>
-  <div><span class="t">Raccord</span><span class="v" id="axCut">propre</span></div>
+  <div><span class="t">Le plan</span><span class="v" id="axShot">contrechamp sur B</span></div>
+  <div><span class="t">A est</span><span class="v" id="axA">à gauche</span></div>
+  <div><span class="t">B est</span><span class="v" id="axB">à droite</span></div>
+  <div><span class="t">Raccord au plan 1</span><span class="v" id="axCut">propre</span></div>
 </div>
 
-<figcaption><b>Fig. 9.1</b> Tant que la caméra reste dans le demi-espace bleu, l'ordre à l'écran ne
-change pas : A à droite, B à gauche. Franchissez l'axe et l'ordre s'inverse — au montage, les deux
-comédiens semblent avoir échangé leurs places en une image. C'est le <b>saut d'axe</b>. La règle
-n'interdit pas de passer de l'autre côté : elle interdit d'y passer <b>par une coupe</b>. Un
-travelling qui franchit l'axe à l'image, lui, se lit très bien.</figcaption>
+<figcaption><b>Fig. 9.1</b> Le plan 1 est tourné : A est à gauche, B à droite, et ils se regardent —
+A vers la droite, B vers la gauche. Tout le travail consiste à garder cet ordre. Tant que la caméra
+reste dans le demi-espace bleu, il tient : A reste à gauche, B reste à droite, et les regards
+continuent de se croiser. Franchissez l'axe et les deux comédiens échangent leurs places en une
+image : celui qui regardait à droite regarde soudain à gauche, et au montage plus personne ne se
+parle. C'est le <b>saut d'axe</b>.
+La règle n'interdit pas de passer de l'autre côté — elle interdit d'y passer <b>par une coupe</b>.
+Un travelling qui franchit l'axe à l'image, lui, se lit très bien.</figcaption>
 
 <script>
 ;(function(_r){var document=CLEL_DOC(_r);
@@ -3827,47 +3854,152 @@ travelling qui franchit l'axe à l'image, lui, se lit très bien.</figcaption>
   var F = document.currentScript.closest('figure');
   var $ = function (id) { return F.querySelector('#' + id); };
   var svg = $('axSvg'), rng = $('axR');
-  var CX = 300, CY = 160, R = 120;
+
+  /* --- le plateau, vu de dessus --- */
+  var CX = 392, CY = 104, R = 84;
+  var A = [357, 104], B = [427, 104];
+  var REF = 30;                       /* le plan 1 : champ sur A, côté autorisé */
+
+  /* --- les deux cadres ---
+     f : la distance focale en unités du dessin. Un champ horizontal de 48°
+         donne f = (largeur / 2) / tan(24°) — c'est la vraie formule, pas un
+         réglage à l'œil, et c'est elle qui fait que l'amorce grossit comme
+         elle grossirait pour de bon.
+     K : le personnage placé au centre du cercle occupe 62 % de la hauteur. */
+  function cadre(x, y, w, h) {
+    return { x: x, y: y, w: w, h: h,
+             f: (w / 2) / Math.tan(24 * Math.PI / 180),
+             K: (0.62 * h / 297) * R,
+             ye: y + h * 0.40 };      /* la ligne des yeux : l'horizon du plan */
+  }
+  var C1 = cadre(16, 52, 252, 142);
+  var C2 = cadre(50, 232, 520, 292);
+
+  /* Où tombe un comédien dans le cadre, et de quelle taille.
+     depth = ce qu'il y a devant l'objectif ; lat = son écart latéral.
+     x à l'écran = centre + f · lat / depth. La taille suit 1 / depth : c'est
+     toute la perspective, et il n'y en a pas d'autre. */
+  function poser(P, cam, v, r, C) {
+    var dx = P[0] - cam[0], dy = P[1] - cam[1];
+    var depth = dx * v[0] + dy * v[1];
+    var lat = dx * r[0] + dy * r[1];
+    if (depth < 10) depth = 10;
+    return { x: C.x + C.w / 2 + C.f * lat / depth,
+             s: C.K / depth, depth: depth,
+             d: Math.hypot(dx, dy) };
+  }
+
+  function corps(g, p, cls) {
+    g.setAttribute('class', cls);
+    g.setAttribute('transform', 'translate(' + p.x.toFixed(1) + ','
+                   + (p.ye).toFixed(1) + ') scale(' + p.s.toFixed(4) + ')');
+    if (!g.firstChild) g.innerHTML = '<use href="#person"/>';
+  }
+
+  /* la flèche du regard : elle part de la tempe et montre où va l'œil */
+  function regard(pA, pB, C) {
+    var d = '';
+    [[pA, pB], [pB, pA]].forEach(function (pair) {
+      var moi = pair[0], lui = pair[1];
+      var sens = lui.x >= moi.x ? 1 : -1;
+      var y = C.ye - 6 * moi.s;
+      var x1 = moi.x + sens * (26 * moi.s + 5);
+      var x2 = x1 + sens * Math.max(16, 30 * moi.s);
+      d += 'M' + x1.toFixed(1) + ' ' + y.toFixed(1) + 'L' + x2.toFixed(1) + ' ' + y.toFixed(1)
+         + 'M' + (x2 - sens * 6).toFixed(1) + ' ' + (y - 5).toFixed(1)
+         + 'L' + x2.toFixed(1) + ' ' + y.toFixed(1)
+         + 'L' + (x2 - sens * 6).toFixed(1) + ' ' + (y + 5).toFixed(1);
+    });
+    return d;
+  }
+
+  /* Fabrique un cadre entier. Renvoie de quel côté est A, et qui est l'amorce. */
+  function lettre(t, p) {
+    /* juste au-dessus du crâne : le personnage va de y = 3 à y = 300 */
+    t.setAttribute('x', p.x.toFixed(1));
+    t.setAttribute('y', (p.ye + 3 * p.s - 7).toFixed(1));
+  }
+
+  function rendre(deg, C, gLoin, gPres, pReg, tA, tB) {
+    var t = deg * Math.PI / 180;
+    var cam = [CX + R * Math.cos(t), CY + R * Math.sin(t)];
+    var v = [(CX - cam[0]) / R, (CY - cam[1]) / R];
+    var r = [-v[1], v[0]];                       /* la droite de la caméra */
+
+    var pA = poser(A, cam, v, r, C), pB = poser(B, cam, v, r, C);
+    pA.ye = C.ye - 26 * pA.s; pB.ye = C.ye - 26 * pB.s;
+
+    /* le plus loin se dessine d'abord : le plus près passe devant */
+    var loin = pA.depth >= pB.depth ? pA : pB, pres = loin === pA ? pB : pA;
+    corps(gLoin, loin, loin === pA ? 'fd' : 'fk');
+    corps(gPres, pres, (pres === pA ? 'fd' : 'fk') + ' ix-amorce');
+    pReg.setAttribute('d', regard(pA, pB, C));
+    pReg.setAttribute('class', 'nf sc');
+    lettre(tA, pA); lettre(tB, pB);
+
+    var ratio = Math.max(pA.d, pB.d) / Math.min(pA.d, pB.d);
+    return { aGauche: pA.x < pB.x,
+             sujet: ratio < 1.3 ? null : (loin === pA ? 'A' : 'B'),
+             cam: cam, v: v, r: r };
+  }
+
+  /* le plan 1 ne bouge jamais : on le pose une fois pour toutes */
+  var ref = rendre(REF, C1, $('ax1Loin'), $('ax1Pres'), $('ax1Reg'), $('ax1LA'), $('ax1LB'));
+  (function () {
+    var t = REF * Math.PI / 180;
+    var x = CX + R * Math.cos(t), y = CY + R * Math.sin(t);
+    $('axRefCam').setAttribute('transform',
+      'translate(' + x.toFixed(1) + ',' + y.toFixed(1) + ') rotate(' + (REF + 180) + ')');
+    $('axRefLbl').setAttribute('text-anchor', 'start');
+    $('axRefLbl').setAttribute('x', (x + 30).toFixed(1));
+    $('axRefLbl').setAttribute('y', (y + 5).toFixed(1));
+  })();
 
   function draw() {
     var deg = +rng.value, t = deg * Math.PI / 180;
     var px = CX + R * Math.cos(t), py = CY + R * Math.sin(t);
-    var allowed = Math.sin(t) > 0;                    /* moitié « basse » = autorisée */
+    var autorise = Math.sin(t) > 0;               /* la moitié basse est la bonne */
 
     $('axCam').setAttribute('transform', 'translate(' + px.toFixed(1) + ',' + py.toFixed(1) + ')');
     $('axCamR').setAttribute('transform', 'rotate(' + (deg + 180).toFixed(1) + ')');
-    $('axCam').setAttribute('class', allowed ? 'fd' : 'fa');
-    $('axCross').style.display = allowed ? 'none' : '';
+    $('axCam').setAttribute('class', autorise ? 'fd' : 'fa');
+    $('axCross').style.display = autorise ? 'none' : '';
     $('axCross').setAttribute('transform', 'translate(' + px.toFixed(1) + ',' + py.toFixed(1) + ')');
     $('axRv').textContent = deg + '°';
 
-    /* cône de visée */
-    var vx = (CX - px), vy = (CY - py), L = Math.hypot(vx, vy);
-    vx /= L; vy /= L;
-    var rx = -vy, ry = vx, S = 72;
+    /* le cône de visée, sur la vue de dessus */
+    var vx = (CX - px) / R, vy = (CY - py) / R, rx = -vy, ry = vx, S = 52;
     $('axCone').setAttribute('d',
       'M' + px.toFixed(1) + ',' + py.toFixed(1) +
       ' L' + (CX + rx * S).toFixed(1) + ',' + (CY + ry * S).toFixed(1) +
       ' L' + (CX - rx * S).toFixed(1) + ',' + (CY - ry * S).toFixed(1) + ' Z');
 
-    /* qui est à droite à l'écran ? produit scalaire avec le vecteur « droite caméra » */
-    var aRight = ((252 - CX) * rx + (160 - CY) * ry) > 0;
-    var xA = 350 + (aRight ? 134 : 50), xB = 350 + (aRight ? 50 : 134);
-    $('axA2').setAttribute('cx', xA); $('axA2t').setAttribute('x', xA);
-    $('axB2').setAttribute('cx', xB); $('axB2t').setAttribute('x', xB);
+    var vue = rendre(deg, C2, $('ax2Loin'), $('ax2Pres'), $('ax2Reg'), $('ax2LA'), $('ax2LB'));
+    var tenu = vue.aGauche === ref.aGauche;       /* A du même côté qu'au plan 1 */
 
-    $('axFrame2b').setAttribute('class', 'nf ' + (allowed ? 'sd' : 'sa'));
-    $('axCap2').setAttribute('class', 'sm ' + (allowed ? 'dt' : 'at'));
-    $('axCap2').textContent = allowed ? 'votre plan' : 'votre plan — l’axe est franchi';
-    $('axHalf').setAttribute('class', allowed ? 'bgd' : 'bgd');
+    var nom = vue.sujet === null ? 'plan à deux'
+            : vue.sujet === 'A' ? 'champ sur A' : 'contrechamp sur B';
+    var amorce = vue.sujet === null ? '' :
+                 ' · amorce ' + (vue.sujet === 'A' ? 'B' : 'A');
+
+    $('ax2Bord').setAttribute('class', 'nf ' + (tenu ? 'sd' : 'sa'));
+    $('ax2Tag').setAttribute('class', 'sm b ' + (tenu ? 'dt' : 'at'));
+    $('ax2Tag').textContent = ('PLAN 2 · ' + nom + amorce).toUpperCase();
+    $('ax2Cap').setAttribute('class', 'sm ' + (tenu ? 'dt' : 'at'));
+    $('ax2Cap').textContent = tenu
+      ? 'l’ordre est tenu : A à ' + (vue.aGauche ? 'gauche' : 'droite')
+        + ', B à ' + (vue.aGauche ? 'droite' : 'gauche') + ' — le raccord passe'
+      : 'A regardait à ' + (ref.aGauche ? 'droite' : 'gauche') + ' au plan 1 ; ici il regarde à '
+        + (vue.aGauche ? 'droite' : 'gauche') + ' — au montage, les deux cessent de se parler';
 
     var sd = $('axSide'), cu = $('axCut');
-    sd.textContent = allowed ? 'autorisé' : 'franchi';
-    sd.className = 'v ' + (allowed ? 'vgood' : 'vbad');
-    $('axA').textContent = aRight ? 'à droite' : 'à gauche';
-    $('axB').textContent = aRight ? 'à gauche' : 'à droite';
-    cu.textContent = allowed ? 'propre' : 'saut d’axe';
-    cu.className = 'v ' + (allowed ? 'vgood' : 'vbad');
+    sd.textContent = autorise ? 'autorisé' : 'franchi';
+    sd.className = 'v ' + (autorise ? 'vgood' : 'vbad');
+    $('axShot').textContent = nom;
+    $('axA').textContent = vue.aGauche ? 'à gauche' : 'à droite';
+    $('axB').textContent = vue.aGauche ? 'à droite' : 'à gauche';
+    cu.textContent = tenu ? 'propre' : 'saut d’axe';
+    cu.className = 'v ' + (tenu ? 'vgood' : 'vbad');
   }
 
   /* --- glisser la caméra --- */
@@ -9097,9 +9229,16 @@ le même décor, et le surlendemain, quand le raccord devra être exact.</p></di
 <div class="L" data-l="en" lang="en" dir="ltr" hidden><span id="top-en"></span>
 
 <div class="progress" aria-hidden="true"></div>
+<div class="scrim" aria-hidden="true"></div>
 
 <header class="topbar">
   <div class="topbar-in">
+    <!-- Au téléphone, c'est ce bouton qui fait glisser le sommaire depuis la
+         gauche. Sur l'accueil seul, où il n'y a pas de sommaire, le script le
+         retire de lui-même. -->
+    <button class="iconbtn" id="menuBtn" aria-label="Open the contents">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
     <a class="brand" href="#top-en"><span class="mark"></span>The Set</a>
     <span class="spacer"></span>
     <button class="iconbtn" id="searchBtn" aria-label="Search the book">
@@ -9129,7 +9268,7 @@ le même décor, et le surlendemain, quand le raccord devra être exact.</p></di
     <div>
       <p class="eyebrow2 rv">Film school · the manual</p>
       <h1 class="htitle rv">The<span class="l2">Set</span></h1>
-      <p class="hsub rv">An illustrated manual of <b>camera, light, sound and editing</b>. 41 chapters, 68 hand-drawn diagrams — eighteen of them you drive with the mouse — plus eight ready-to-build lighting plots, with the working English vocabulary of the set.</p>
+      <p class="hsub rv">An illustrated manual of <b>camera, light, sound and editing</b>. 42 chapters, 68 hand-drawn diagrams — eighteen of them you drive with the mouse — plus eight ready-to-build lighting plots, with the working English vocabulary of the set.</p>
       <div class="hcta rv">
         <a class="btn btn-p" href="#c1">
           <svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v16H6.5A2.5 2.5 0 0 0 4 21z"/><path d="M4 5.5V21"/></svg>Start chapter 1</a>
@@ -9240,35 +9379,12 @@ le même décor, et le surlendemain, quand le raccord devra être exact.</p></di
     </figure>
   </div>
 
-  <a class="scroller rv" href="#sommaire" aria-label="Aller au sommaire"><span>Contents</span><span class="ln2"></span></a>
+  <!-- Le sommaire n'est plus une page qu'on traverse : il est dans la colonne
+       de gauche, du premier chapitre au dernier. Ici, on entre dans le livre. -->
+  <a class="scroller rv" href="#c1" aria-label="Start chapter 1"><span>Start reading</span><span class="ln2"></span></a>
 </section>
 
-<section class="dark-sec" id="sommaire">
-  <div class="wrap">
-    <div class="sec-h"><span class="n">01</span><h2>The book, part by part</h2></div>
-    <p class="sec-p">Six parts that read in order: the camera, the lens, the light, the set — then sound and editing, without which none of the rest is of any use.</p>
-    <div class="parts">
-<article class="pcard"><p class="pn">Part I</p><h3>The camera</h3><p class="pd">What the machine does with light: the sensor, the lens, exposure, the frame and movement.</p><ol><li><a href="#c1"><b>01</b><span>Anatomie de la caméra &amp; le capteur</span></a></li><li><a href="#c2"><b>02</b><span>L'objectif et la focale</span></a></li><li><a href="#c3"><b>03</b><span>Le triangle d'exposition</span></a></li><li><a href="#c4"><b>04</b><span>La profondeur de champ</span></a></li><li><a href="#c5"><b>05</b><span>L'échelle des plans</span></a></li><li><a href="#c6"><b>06</b><span>Les angles de prise de vues</span></a></li><li><a href="#c7"><b>07</b><span>Les mouvements d'appareil</span></a></li><li><a href="#c8"><b>08</b><span>Cadrage et composition</span></a></li><li><a href="#c9"><b>09</b><span>La règle des 180°</span></a></li><li><a href="#c10"><b>10</b><span>Fréquence et angle d'obturation</span></a></li></ol></article>
-<article class="pcard"><p class="pn">Part II</p><h3>The light</h3><p class="pd">The four properties, the inverse square law, colour, and how to build lighting that tells you something.</p><ol><li><a href="#c11"><b>11</b><span>Les quatre propriétés de la lumière</span></a></li><li><a href="#c12"><b>12</b><span>Lumière dure et lumière douce</span></a></li><li><a href="#c13"><b>13</b><span>La loi de l'inverse du carré</span></a></li><li><a href="#c14"><b>14</b><span>La température de couleur</span></a></li><li><a href="#c15"><b>15</b><span>L'éclairage en trois points</span></a></li><li><a href="#c16"><b>16</b><span>Les schémas de portrait</span></a></li><li><a href="#c17"><b>17</b><span>Le rapport d'éclairage</span></a></li><li><a href="#c18"><b>18</b><span>Projecteurs et accessoires</span></a></li><li><a href="#c19"><b>19</b><span>Le plan de feu</span></a></li></ol></article>
-<article class="pcard"><p class="pn">Part III</p><h3>Inside the machine</h3><p class="pd">The technical anatomy: sensor, lens, codec, fixture, DMX and how the image is scanned.</p><ol><li><a href="#c20"><b>20</b><span>Anatomie de la caméra</span></a></li><li><a href="#c21"><b>21</b><span>Le capteur en détail</span></a></li><li><a href="#c22"><b>22</b><span>Anatomie de l'objectif</span></a></li><li><a href="#c23"><b>23</b><span>Codec, couleur et log</span></a></li><li><a href="#c24"><b>24</b><span>Ce qui distingue deux caméras</span></a></li><li><a href="#c25"><b>25</b><span>Anatomie du projecteur</span></a></li><li><a href="#c26"><b>26</b><span>Électricité et DMX</span></a></li><li><a href="#c27"><b>27</b><span>Le balayage et les définitions</span></a></li></ol></article>
-<article class="pcard"><p class="pn">Part IV</p><h3>On set</h3><p class="pd">The craft: metering the light, filtering, pulling focus, holding the camera, taming the sun and lighting a green screen.</p><ol><li><a href="#c28"><b>28</b><span>Le posemètre et la mesure</span></a></li><li><a href="#c29"><b>29</b><span>Les filtres</span></a></li><li><a href="#c30"><b>30</b><span>Faire le point</span></a></li><li><a href="#c31"><b>31</b><span>La stabilisation</span></a></li><li><a href="#c32"><b>32</b><span>La lumière naturelle</span></a></li><li><a href="#c33"><b>33</b><span>Le fond vert</span></a></li></ol></article>
-<article class="pcard"><p class="pn">Part V</p><h3>Sound</h3><p class="pd">The basics, and no more: what the microphone hears, level, distance, the on-set habits that save a soundtrack — and the slate, which glues picture and sound back together.</p><ol><li><a href="#c34"><b>34</b><span>Ce que le micro entend</span></a></li><li><a href="#c35"><b>35</b><span>Le niveau, et le casque</span></a></li><li><a href="#c36"><b>36</b><span>Placer le micro</span></a></li><li><a href="#c37"><b>37</b><span>Le son sur le plateau</span></a></li><li><a href="#c38"><b>38</b><span>La claquette</span></a></li></ol></article>
-<article class="pcard"><p class="pn">Part VI</p><h3>Editing</h3><p class="pd">The basics again: organising the rushes, cutting in the right place, feeling the pace, and exporting without spoiling the work.</p><ol><li><a href="#c39"><b>39</b><span>Dérusher et ranger</span></a></li><li><a href="#c40"><b>40</b><span>La coupe</span></a></li><li><a href="#c41"><b>41</b><span>Le rythme</span></a></li><li><a href="#c42"><b>42</b><span>Exporter</span></a></li></ol></article>
-    </div>
 
-    <div class="sec-h" style="margin-top:56px"><span class="n">02</span><h2>Appendices</h2></div>
-    <div class="annex">
-<a class="acard" href="#pf"><span class="an">Annexe A</span><h4>Plans de feu prêts à monter</h4><p>The eight lighting plots in a single figure: one click and the plot draws itself to scale, with its image, its kit and its traps.</p></a><a class="acard" href="#ck"><span class="an">Annexe B</span><h4>Check-list de tournage</h4><p>What to check before, during and after a shoot — plus the book's technical sources.</p></a>
-    </div>
-  </div>
-</section>
-
-<footer class="homefoot">
-  <div class="wrap">
-    <span>© Yassine Zineddine — all rights reserved</span>
-    <span>The Set · English edition</span>
-  </div>
-</footer>
 
 <div class="sdlg" id="sdlg" role="dialog" aria-modal="true" aria-label="Search the book" data-vide="No result for">
   <div class="sbox">
@@ -9493,9 +9609,16 @@ le même décor, et le surlendemain, quand le raccord devra être exact.</p></di
 <div class="L" data-l="ar" lang="ar" dir="rtl" hidden><span id="top-ar"></span>
 
 <div class="progress" aria-hidden="true"></div>
+<div class="scrim" aria-hidden="true"></div>
 
 <header class="topbar">
   <div class="topbar-in">
+    <!-- Au téléphone, c'est ce bouton qui fait glisser le sommaire depuis la
+         gauche. Sur l'accueil seul, où il n'y a pas de sommaire, le script le
+         retire de lui-même. -->
+    <button class="iconbtn" id="menuBtn" aria-label="افتح الفهرس">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
     <a class="brand" href="#top-ar"><span class="mark"></span>البلاطو</a>
     <span class="spacer"></span>
     <button class="iconbtn" id="searchBtn" aria-label="ابحث في الكتاب">
@@ -9525,7 +9648,7 @@ le même décor, et le surlendemain, quand le raccord devra être exact.</p></di
     <div>
       <p class="eyebrow2 rv">تكوين سمعي بصري · الدليل</p>
       <h1 class="htitle rv"><span class="l2">البلاطو</span></h1>
-      <p class="hsub rv">دليل مصوَّر في <b>التصوير والإضاءة والصوت والمونتاج</b>. واحد وأربعون فصلاً، ثمانية وستون رسماً مرسومة باليد — ثمانية عشر منها تُحرَّك بالفأرة — وثمانية مخططات إضاءة جاهزة للتركيب، مع المصطلح الإنجليزي المستعمل في البلاطوهات.</p>
+      <p class="hsub rv">دليل مصوَّر في <b>التصوير والإضاءة والصوت والمونتاج</b>. اثنان وأربعون فصلاً، ثمانية وستون رسماً مرسومة باليد — ثمانية عشر منها تُحرَّك بالفأرة — وثمانية مخططات إضاءة جاهزة للتركيب، مع المصطلح الإنجليزي المستعمل في البلاطوهات.</p>
       <div class="hcta rv">
         <a class="btn btn-p" href="#c1">
           <svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v16H6.5A2.5 2.5 0 0 0 4 21z"/><path d="M4 5.5V21"/></svg>ابدأ بالفصل الأول</a>
@@ -9636,35 +9759,12 @@ le même décor, et le surlendemain, quand le raccord devra être exact.</p></di
     </figure>
   </div>
 
-  <a class="scroller rv" href="#sommaire" aria-label="Aller au sommaire"><span>الفهرس</span><span class="ln2"></span></a>
+  <!-- Le sommaire n'est plus une page qu'on traverse : il est dans la colonne
+       de gauche, du premier chapitre au dernier. Ici, on entre dans le livre. -->
+  <a class="scroller rv" href="#c1" aria-label="ابدأ بالفصل الأول"><span>ابدأ القراءة</span><span class="ln2"></span></a>
 </section>
 
-<section class="dark-sec" id="sommaire">
-  <div class="wrap">
-    <div class="sec-h"><span class="n">01</span><h2>الكتاب، جزءاً بجزء</h2></div>
-    <p class="sec-p">ستة أجزاء تُقرأ بالترتيب: الكاميرا، ثم العدسة، ثم الضوء، ثم البلاطو — ثم الصوت والمونتاج، وبدونهما لا ينفع الباقي.</p>
-    <div class="parts">
-<article class="pcard"><p class="pn">الجزء الأول</p><h3>الكاميرا</h3><p class="pd">ما تفعله الآلة بالضوء: المستشعر، العدسة، التعريض، الإطار والحركة.</p><ol><li><a href="#c1"><b>01</b><span>Anatomie de la caméra &amp; le capteur</span></a></li><li><a href="#c2"><b>02</b><span>L'objectif et la focale</span></a></li><li><a href="#c3"><b>03</b><span>Le triangle d'exposition</span></a></li><li><a href="#c4"><b>04</b><span>La profondeur de champ</span></a></li><li><a href="#c5"><b>05</b><span>L'échelle des plans</span></a></li><li><a href="#c6"><b>06</b><span>Les angles de prise de vues</span></a></li><li><a href="#c7"><b>07</b><span>Les mouvements d'appareil</span></a></li><li><a href="#c8"><b>08</b><span>Cadrage et composition</span></a></li><li><a href="#c9"><b>09</b><span>La règle des 180°</span></a></li><li><a href="#c10"><b>10</b><span>Fréquence et angle d'obturation</span></a></li></ol></article>
-<article class="pcard"><p class="pn">الجزء الثاني</p><h3>الضوء</h3><p class="pd">الخصائص الأربع، قانون التربيع العكسي، اللون، وكيف نبني إضاءة تروي شيئاً.</p><ol><li><a href="#c11"><b>11</b><span>Les quatre propriétés de la lumière</span></a></li><li><a href="#c12"><b>12</b><span>Lumière dure et lumière douce</span></a></li><li><a href="#c13"><b>13</b><span>La loi de l'inverse du carré</span></a></li><li><a href="#c14"><b>14</b><span>La température de couleur</span></a></li><li><a href="#c15"><b>15</b><span>L'éclairage en trois points</span></a></li><li><a href="#c16"><b>16</b><span>Les schémas de portrait</span></a></li><li><a href="#c17"><b>17</b><span>Le rapport d'éclairage</span></a></li><li><a href="#c18"><b>18</b><span>Projecteurs et accessoires</span></a></li><li><a href="#c19"><b>19</b><span>Le plan de feu</span></a></li></ol></article>
-<article class="pcard"><p class="pn">الجزء الثالث</p><h3>داخل الآلة</h3><p class="pd">التشريح التقني: المستشعر، العدسة، الكوديك، الكشّاف، DMX ومسح الصورة.</p><ol><li><a href="#c20"><b>20</b><span>Anatomie de la caméra</span></a></li><li><a href="#c21"><b>21</b><span>Le capteur en détail</span></a></li><li><a href="#c22"><b>22</b><span>Anatomie de l'objectif</span></a></li><li><a href="#c23"><b>23</b><span>Codec, couleur et log</span></a></li><li><a href="#c24"><b>24</b><span>Ce qui distingue deux caméras</span></a></li><li><a href="#c25"><b>25</b><span>Anatomie du projecteur</span></a></li><li><a href="#c26"><b>26</b><span>Électricité et DMX</span></a></li><li><a href="#c27"><b>27</b><span>Le balayage et les définitions</span></a></li></ol></article>
-<article class="pcard"><p class="pn">الجزء الرابع</p><h3>في البلاطو</h3><p class="pd">الممارسة: قياس الضوء، الترشيح، ضبط البؤرة، حمل الكاميرا، ترويض الشمس وإضاءة الشاشة الخضراء.</p><ol><li><a href="#c28"><b>28</b><span>Le posemètre et la mesure</span></a></li><li><a href="#c29"><b>29</b><span>Les filtres</span></a></li><li><a href="#c30"><b>30</b><span>Faire le point</span></a></li><li><a href="#c31"><b>31</b><span>La stabilisation</span></a></li><li><a href="#c32"><b>32</b><span>La lumière naturelle</span></a></li><li><a href="#c33"><b>33</b><span>Le fond vert</span></a></li></ol></article>
-<article class="pcard"><p class="pn">الجزء الخامس</p><h3>الصوت</h3><p class="pd">الأساسيات لا أكثر: ما يلتقطه الميكروفون، المستوى، المسافة، وعادات البلاطو التي تنقذ الصوت — والكلاكيت التي تلحم الصورة بالصوت.</p><ol><li><a href="#c34"><b>34</b><span>Ce que le micro entend</span></a></li><li><a href="#c35"><b>35</b><span>Le niveau, et le casque</span></a></li><li><a href="#c36"><b>36</b><span>Placer le micro</span></a></li><li><a href="#c37"><b>37</b><span>Le son sur le plateau</span></a></li><li><a href="#c38"><b>38</b><span>La claquette</span></a></li></ol></article>
-<article class="pcard"><p class="pn">الجزء السادس</p><h3>المونتاج</h3><p class="pd">الأساسيات كذلك: ترتيب المواد، القطع في المكان الصحيح، الإحساس بالإيقاع، والتصدير دون إفساد العمل.</p><ol><li><a href="#c39"><b>39</b><span>Dérusher et ranger</span></a></li><li><a href="#c40"><b>40</b><span>La coupe</span></a></li><li><a href="#c41"><b>41</b><span>Le rythme</span></a></li><li><a href="#c42"><b>42</b><span>Exporter</span></a></li></ol></article>
-    </div>
 
-    <div class="sec-h" style="margin-top:56px"><span class="n">02</span><h2>الملاحق</h2></div>
-    <div class="annex">
-<a class="acard" href="#pf"><span class="an">Annexe A</span><h4>Plans de feu prêts à monter</h4><p>مخططات الإضاءة الثمانية في رسم واحد: نقرة واحدة فيُرسم المخطط بمقياسه، مع صورته وعتاده ومطبّاته.</p></a><a class="acard" href="#ck"><span class="an">Annexe B</span><h4>Check-list de tournage</h4><p>ما يجب التحقق منه قبل التصوير وأثناءه وبعده — مع المصادر التقنية للكتاب.</p></a>
-    </div>
-  </div>
-</section>
-
-<footer class="homefoot">
-  <div class="wrap">
-    <span>© ياسين زين الدين — جميع الحقوق محفوظة</span>
-    <span>البلاطو · النسخة العربية</span>
-  </div>
-</footer>
 
 <div class="sdlg" id="sdlg" role="dialog" aria-modal="true" aria-label="ابحث في الكتاب" data-vide="لا نتيجة لـ">
   <div class="sbox">
@@ -11792,7 +11892,9 @@ function CLEL_CHROME(root){var document=CLEL_DOC(root);
     document.body.style.overflow = on ? 'hidden' : '';
   }
   var mb = document.getElementById('menuBtn');
-  if (mb) mb.addEventListener('click', function () { drawer(!side.classList.contains('open')); });
+  /* Pas de sommaire sur cette page — le bouton n'ouvrirait rien : on l'enlève. */
+  if (mb && !side) mb.hidden = true;
+  if (mb && side) mb.addEventListener('click', function () { drawer(!side.classList.contains('open')); });
   if (scrim) scrim.addEventListener('click', function () { drawer(false); });
   if (side) side.addEventListener('click', function (e) {
     if (e.target.closest('a')) drawer(false);
